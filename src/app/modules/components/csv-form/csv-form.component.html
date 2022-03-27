@@ -1,0 +1,22 @@
+
+<div class="upload-file">
+    <input hidden="true"  type="file" accept=".csv" id="file-input" (change)="changeListener($event)">
+        <label for="file-input">
+        <a md-raised-button class="btn"><i class="material-icons">file_upload</i> 
+            Загрузить файл
+        </a>
+        </label>
+</div>
+
+<div id="result">
+    <!-- {{text[1]}}     -->
+    <ul class="tree">
+      <li><a class="state">+/-</a><a>Текст</a></li>
+      <li class="expand"><a class="state">+/-</a><a>Текст</a>
+         <ul class="tree">...</ul>
+      </li>
+  </ul>
+</div>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+
