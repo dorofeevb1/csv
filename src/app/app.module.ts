@@ -3,15 +3,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-// import { AuthService } from '@core/services/auth/auth.service';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';  
 import { CsvModule } from './modules/csv-save.module';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTreeModule} from '@angular/material/tree';
-const modules = [BrowserModule, BrowserAnimationsModule, AppRoutingModule,MatTreeModule, CsvModule, CommonModule, NgxMatFileInputModule, MatIconModule];
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatInputModule} from '@angular/material/input';
+
+const modules = [BrowserModule, MatInputModule, BrowserAnimationsModule, AppRoutingModule,MatTreeModule, CsvModule, CommonModule, MatDialogModule, NgxMatFileInputModule, MatIconModule,MatCheckboxModule,MatButtonModule];
 
 @NgModule({
   declarations: [AppComponent],

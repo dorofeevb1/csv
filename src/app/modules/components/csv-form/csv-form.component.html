@@ -8,15 +8,23 @@
         </label>
 </div>
 
-<div id="result">
-    <!-- {{text[1]}}     -->
-    <ul class="tree">
-      <li><a class="state">+/-</a><a>Текст</a></li>
-      <li class="expand"><a class="state">+/-</a><a>Текст</a>
-         <ul class="tree">...</ul>
-      </li>
-  </ul>
-</div>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      {{node.name}}
+      <button mat-icon-button (click)="createComments(node)" ><mat-icon>add</mat-icon></button>
+    </mat-tree-node>
+    <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle
+              [attr.aria-label]="'Toggle ' + node.name">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+        </mat-icon>
+      </button>
+     
+      {{node.name}}
+      <button mat-icon-button (click)="createComments(node)"><mat-icon>add</mat-icon></button>
 
+    </mat-tree-node>
+  </mat-tree>

@@ -1,5 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { LocalStorageService } from '../../services/localStorageService/localStorage.service';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDialogComponent } from '../dialog/mat-dialog/mat-dialog.component';
+
+interface ITree {
+  id: string;
+  name: string;
+  parentId: string;
+  childNodes?: ITree[];
+  comments?: string
+}
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+  id: number;
+  comments:string;
+}
 
 @Component({
   selector: 'app-csv-form',
@@ -7,13 +25,33 @@ import { LocalStorageService } from '../../services/localStorageService/localSto
   styleUrls: ['./csv-form.component.scss']
 })
 export class CsvFormComponent  {
-
 allString:any = []
-allArray:any = []
-tree:any  = []
+allArray: Array<[string, string, string]> = []
+tree: any  = []
 
-  constructor() {
-  }
+  constructor(public dialog: MatDialog) {}
+
+  private _transformer = (node: ITree, level: number) => {
+    return {
+      id: Number(node.id),
+      expandable: !!node.childNodes && node.childNodes.length > 0,
+      name: node.name,
+      level: level,
+      comments: '',
+    };
+  };
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+    node => node.level,
+    node => node.expandable,
+  );
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    node => node.level,
+    node => node.expandable,
+    node => node.childNodes,
+  );
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
 
   changeListener(file: any) {
         this.fileText(file.target);            
@@ -39,47 +77,40 @@ tree:any  = []
   }
 
   createArray(){
-    let o:any = new Object()
-    for(let all of this.allArray ){  
-      let childs:any = new Object()
-      if (this.tree.length ) {
-        if(childs.id){
-          o.childs.forEach( (el: { id: number; }) => {
-            if(el.id == Number(all[2]) && !undefined && !NaN){ 
-              console.log(o.childs);
-              
-              tree(childs.id,all,childs)
-              console.log(childs);
-              }
-          });
-         
+   const createDataTree = (dataset: Array<[string, string, string]>) => {
+      const hashTable = Object.create(null);
+      dataset.forEach((aData) => {
+        const [id, name, parentId] = aData;
+        hashTable[id] = { id, name, parentId, childNodes: [] };
+      });
+      const dataTree: ITree[] = [];
+      dataset.forEach((aData) => {
+        const [id, _, parentId] = aData;
+        if (parentId !== "-1") {
+          hashTable[parentId].childNodes.push(hashTable[id]);
+        } else {
+          dataTree.push(hashTable[id]);
         }
-        else{
-          if(o.Id == Number(all[2]) && !undefined && !NaN){ 
-          tree(o.Id,all,childs)
-          o.childs.push(childs)
-          console.log(o);
-          }
-        }
-      }else{
-        o = {}
-        o.Id = Number(all[0])
-        o.text = all[1]
-        o.parentid = Number(all[2])
-        o.childs=[]
-        this.tree.push(o)
-        tree(o.Id,all,childs)
-      }
-    }
+      });
+      return dataTree;
+    };
+    this.tree = createDataTree(this.allArray.slice(0, this.allArray.length - 1))
+    this.dataSource.data = this.tree;
   }
-}
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
 
-function tree( id:number ,all: string,childs:any ) {
-      if(id == Number(all[2]) && !undefined && !NaN){ 
-      childs.id = Number(all[0])
-      childs.text = all[1]
-      childs.parentid = Number(all[2]) 
-    }
-    else{}  
+  createComments(node:ExampleFlatNode){
+  
+    let dialogRef = this.dialog.open(MatDialogComponent, {
+      data: [
+        node
+      ],
+    });
+
+    dialogRef.afterClosed().subscribe((value) =>  {
+      node.comments = value
+    })
+
     
+  }
 }
