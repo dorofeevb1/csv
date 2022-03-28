@@ -23,20 +23,18 @@ export class MatDialogComponent implements OnInit {
   ngOnInit(): void {
 
 this.commentForm = this.fb.group({
-  text: ['', [Validators.required]],
+  text: [this.data.comments, [Validators.required]],
 });
 
   }
   onSubmit(el:any) {
-
-    
     this.dialogRef.close(this.commentForm.value);
   }
 
   delite(el:any){
     this.commentForm.value 
   
-    this.dialogRef.close('');
+    this.dialogRef.close({text: ""});
     
   }
 }

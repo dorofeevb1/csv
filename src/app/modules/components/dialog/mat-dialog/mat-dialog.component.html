@@ -15,12 +15,12 @@
 
    <div class="create" *ngIf="el.comments != '' "> 
     <h3> редактировать комментарий для {{el.name}}</h3>
-    <form class="example-form">
+    <form class="example-form" [formGroup]="commentForm" (ngSubmit)="onSubmit(el)">
        <mat-form-field class="example-full-width" appearance="fill">
          <mat-label>комментарий</mat-label>
          <input matInput placeholder="Ваш комментарий" value="{{el.comments}}" formControlName="text"   >
        </mat-form-field>
-       <button mat-icon-button  (click)="delite(el)"><mat-icon>add</mat-icon></button>
+       <button mat-icon-button ><mat-icon>add</mat-icon></button>
        <button mat-icon-button (click)="delite(el)"><mat-icon>cancel</mat-icon></button>
     </form>
   </div>

@@ -12,7 +12,7 @@
 <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
       <button mat-icon-button disabled></button>
-      {{node.name}}
+     <p [title]="node.comments"> {{node.name}}</p>
       <button mat-icon-button (click)="createComments(node)" ><mat-icon>add</mat-icon></button>
     </mat-tree-node>
     <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
@@ -23,7 +23,7 @@
         </mat-icon>
       </button>
      
-      {{node.name}}
+      <p [title]="node.comments"> {{node.name}}</p>
       <button mat-icon-button (click)="createComments(node)"><mat-icon>add</mat-icon></button>
 
     </mat-tree-node>

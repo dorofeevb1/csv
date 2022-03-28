@@ -108,7 +108,9 @@ tree: any  = []
     });
 
     dialogRef.afterClosed().subscribe((value) =>  {
-      node.comments = value
+      node.comments = value.text
+      console.log(value);
+      
     })
 
     
