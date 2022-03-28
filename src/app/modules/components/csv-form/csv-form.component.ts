@@ -9,16 +9,14 @@ import { LocalStorageService } from '../../services/localStorageService/localSto
 export class CsvFormComponent  {
 
 allString:any = []
-allArrayText:any = []
-alltext:any [] = []
-count:any  = []
+allArray:any = []
+tree:any  = []
+
   constructor() {
   }
 
   changeListener(file: any) {
-        this.fileText(file.target);        
-    
-     
+        this.fileText(file.target);            
       }
 
   fileText(inputValue: any): void {
@@ -33,79 +31,55 @@ count:any  = []
           this.allString = fileString.split('\r\n')
 
         for (let text of this.allString) {
-          this.allArrayText.push(text.split(","))
+          this.allArray.push(text.split(","))
         }
         this.createArray()
          };
          myReader.readAsText(file);
   }
 
-
-
   createArray(){
-    // Создание массива объектов
-       let o:any = new Object()
-   
-       for (let alltext of this.allArrayText){
-         let c = alltext[1]
-         o = {}
-         o.parent = c
-         o.childs = []
-         this.count.push(o)
-   
-         this.filterText(alltext, o)  
-       
-
-       }
-       
-     }
-     filterText(alltext:any, o:any){
-       let a = alltext[0]
-       for (let file of this.allArrayText){
-         if (a === file[2]) {  
-             let child:any = new Object( )
-             child.text = file[1]
-             child.id = file[0]
-             child.parentId = file[2]
-             o.childs.push(child)
-             this.getAllCategory(file)
-         }else{}
+    let o:any = new Object()
+    for(let all of this.allArray ){  
+      let childs:any = new Object()
+      if (this.tree.length ) {
+        if(childs.id){
+          o.childs.forEach( (el: { id: number; }) => {
+            if(el.id == Number(all[2]) && !undefined && !NaN){ 
+              console.log(o.childs);
+              
+              tree(childs.id,all,childs)
+              console.log(childs);
+              }
+          });
          
-     }
-   }
-  getAllCategory(child:any){
-    let tree: any[] = [], map = new Map();
-    createTree(child)
-    function createTree(arr:any) {
-      if (!arr || !arr.length) {
-         return []; 
         }
-      for (var i = 0, len = arr.length; i < len; ++i) {
-        var item = arr[i];
-        var mapItem = map.get(item.id);
-        if (!mapItem || Array.isArray(mapItem)) {
-          if (mapItem) {
-            item.children = mapItem;
-          }
-          map.set(item.id, item);
-        }
-        if (item.parentId == null) {
-          tree.push(item);  
-        } else {
-          var parentItem = map.get(item.parentId);
-          if (!parentItem) {
-            map.set(item.parentId, [item]);
-            
-          } else {
-            var children = Array.isArray(parentItem) ? parentItem : (parentItem.children = parentItem.children || []);
-            children.push(item);
+        else{
+          if(o.Id == Number(all[2]) && !undefined && !NaN){ 
+          tree(o.Id,all,childs)
+          o.childs.push(childs)
+          console.log(o);
           }
         }
+      }else{
+        o = {}
+        o.Id = Number(all[0])
+        o.text = all[1]
+        o.parentid = Number(all[2])
+        o.childs=[]
+        this.tree.push(o)
+        tree(o.Id,all,childs)
       }
-      return tree;
     }
+  }
+}
+
+function tree( id:number ,all: string,childs:any ) {
+      if(id == Number(all[2]) && !undefined && !NaN){ 
+      childs.id = Number(all[0])
+      childs.text = all[1]
+      childs.parentid = Number(all[2]) 
+    }
+    else{}  
     
-   
-    
-  }  
 }
